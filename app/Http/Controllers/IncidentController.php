@@ -14,10 +14,30 @@ class IncidentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $incidents = Incident::with('user')->get();
-        return view('incidents.index', compact('incidents'));
+        $query = Incident::with('user');
+
+        if ($request->filled('date')) {
+            $query->whereDate('date', $request->input('date'));
+        }
+
+        if ($request->filled('location')) {
+            $query->where('location', 'like', '%' . $request->input('location') . '%');
+        }
+
+        if ($request->filled('user_id')) {
+            $query->where('user_id', $request->input('user_id'));
+        }
+
+        if ($request->filled('category')) {
+            $query->where('title', 'like', '%' . $request->input('category') . '%');
+        }
+
+        $incidents = $query->paginate(10)->withQueryString();
+        $users = User::all();
+
+        return view('incidents.index', compact('incidents', 'users'));
     }
 
     /**
