@@ -9,7 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
                 <div class="p-6 lg:p-8 bg-white border-b border-gray-200">
-                    <form action="{{ route('incidents.store') }}" method="POST">
+                    <form action="{{ route('incidents.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="grid grid-cols-1 gap-6">
                             <div>
@@ -35,6 +35,10 @@
                                         <option value="{{ $user->id }}">{{ $user->name }}</option>
                                     @endforeach
                                 </select>
+                            </div>
+                            <div>
+                                <label for="files" class="block font-medium text-sm text-gray-700">{{ __('Files') }}</label>
+                                <input type="file" name="files[]" id="files" multiple class="form-input rounded-md shadow-sm mt-1 block w-full" />
                             </div>
                             <div class="flex items-center justify-end mt-4">
                                 <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">

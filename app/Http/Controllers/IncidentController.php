@@ -60,9 +60,17 @@ class IncidentController extends Controller
             'location' => 'required',
             'date' => 'required|date',
             'user_id' => 'required|exists:users,id',
+            'files.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
         ]);
 
-        Incident::create($request->all());
+        $incident = Incident::create($request->all());
+
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $path = $file->store('incidents', 'public');
+                $incident->files()->create(['path' => $path]);
+            }
+        }
 
         return redirect()->route('incidents.index')
             ->with('success', 'Incident created successfully.');
@@ -73,6 +81,8 @@ class IncidentController extends Controller
      */
     public function show(Incident $incident)
     {
+        $incident->load('files');
+
         return view('incidents.show', compact('incident'));
     }
 
@@ -96,9 +106,17 @@ class IncidentController extends Controller
             'location' => 'required',
             'date' => 'required|date',
             'user_id' => 'required|exists:users,id',
+            'files.*' => 'file|mimes:jpg,jpeg,png,pdf,doc,docx|max:2048',
         ]);
 
         $incident->update($request->all());
+
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $path = $file->store('incidents', 'public');
+                $incident->files()->create(['path' => $path]);
+            }
+        }
 
         return redirect()->route('incidents.index')
             ->with('success', 'Incident updated successfully');
