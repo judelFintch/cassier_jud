@@ -13,6 +13,8 @@ class Incident extends Model
         'title',
         'description',
         'location',
+        'latitude',
+        'longitude',
         'date',
         'user_id',
     ];

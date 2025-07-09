@@ -17,4 +17,8 @@ Route::middleware([
     })->name('dashboard');
 
     Route::resource('incidents', IncidentController::class);
+
+    Route::get('/map', function() {
+        return view('map.index');
+    })->name('map.index');
 });

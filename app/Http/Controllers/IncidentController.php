@@ -92,4 +92,10 @@ class IncidentController extends Controller
         return redirect()->route('incidents.index')
             ->with('success', 'Incident deleted successfully');
     }
+
+    public function getIncidentsForMap()
+    {
+        $incidents = Incident::whereNotNull('latitude')->whereNotNull('longitude')->get();
+        return response()->json($incidents);
+    }
 }

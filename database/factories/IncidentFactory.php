@@ -21,6 +21,8 @@ class IncidentFactory extends Factory
             'title' => $this->faker->sentence,
             'description' => $this->faker->paragraph,
             'location' => $this->faker->address,
+            'latitude' => $this->faker->latitude,
+            'longitude' => $this->faker->longitude,
             'date' => $this->faker->dateTimeThisMonth,
             'user_id' => User::factory(),
         ];
