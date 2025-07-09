@@ -9,3 +9,5 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::get('/incidents-map', [IncidentController::class, 'getIncidentsForMap'])->middleware('auth:sanctum');
+Route::get('/stats/incidents-by-type', [IncidentController::class, 'getStatsByType'])->middleware('auth:sanctum');
+Route::get('/stats/incidents-by-day', [IncidentController::class, 'getStatsByDay'])->middleware('auth:sanctum');

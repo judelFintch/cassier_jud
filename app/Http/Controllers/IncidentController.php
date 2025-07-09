@@ -6,6 +6,8 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Incident;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class IncidentController extends Controller
 {
@@ -97,5 +99,49 @@ class IncidentController extends Controller
     {
         $incidents = Incident::whereNotNull('latitude')->whereNotNull('longitude')->get();
         return response()->json($incidents);
+    }
+
+    public function getStatsByType()
+    {
+        // For demonstration, we'll group by the first word of the title.
+        // In a real app, you'd have a dedicated 'type' or 'category' column.
+        $stats = Incident::select(
+                DB::raw("SUBSTRING_INDEX(title, ' ', 1) as type"),
+                DB::raw('count(*) as count')
+            )
+            ->groupBy('type')
+            ->pluck('count', 'type');
+
+        return response()->json([
+            'labels' => $stats->keys(),
+            'data' => $stats->values(),
+        ]);
+    }
+
+    public function getStatsByDay()
+    {
+        $endDate = Carbon::now();
+        $startDate = Carbon::now()->subDays(29);
+
+        $stats = Incident::select(
+                DB::raw('DATE(date) as incident_date'),
+                DB::raw('count(*) as count')
+            )
+            ->whereBetween('date', [$startDate, $endDate])
+            ->groupBy('incident_date')
+            ->orderBy('incident_date')
+            ->pluck('count', 'incident_date');
+
+        // Fill in missing dates with 0 counts
+        $dates = collect();
+        for ($date = $startDate->copy(); $date->lte($endDate); $date->addDay()) {
+            $formattedDate = $date->format('Y-m-d');
+            $dates->put($formattedDate, $stats->get($formattedDate, 0));
+        }
+
+        return response()->json([
+            'labels' => $dates->keys(),
+            'data' => $dates->values(),
+        ]);
     }
 }
