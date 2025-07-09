@@ -18,6 +18,37 @@
                         </a>
                     </div>
 
+                    <form method="GET" action="{{ route('incidents.index') }}" class="mt-4">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label for="date" class="block text-sm font-medium text-gray-700">{{ __('Date') }}</label>
+                                <input type="date" name="date" id="date" value="{{ request('date') }}" class="form-input rounded-md shadow-sm mt-1 block w-full" />
+                            </div>
+                            <div>
+                                <label for="location" class="block text-sm font-medium text-gray-700">{{ __('Location') }}</label>
+                                <input type="text" name="location" id="location" value="{{ request('location') }}" class="form-input rounded-md shadow-sm mt-1 block w-full" />
+                            </div>
+                            <div>
+                                <label for="user_id" class="block text-sm font-medium text-gray-700">{{ __('Officer') }}</label>
+                                <select name="user_id" id="user_id" class="form-select rounded-md shadow-sm mt-1 block w-full">
+                                    <option value="">{{ __('All') }}</option>
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}" @if(request('user_id') == $user->id) selected @endif>{{ $user->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div>
+                                <label for="category" class="block text-sm font-medium text-gray-700">{{ __('Category') }}</label>
+                                <input type="text" name="category" id="category" value="{{ request('category') }}" class="form-input rounded-md shadow-sm mt-1 block w-full" />
+                            </div>
+                        </div>
+                        <div class="flex items-center justify-end mt-4">
+                            <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                {{ __('Search') }}
+                            </button>
+                        </div>
+                    </form>
+
                     <div class="mt-6 text-gray-500">
                         <table class="table-auto w-full">
                             <thead>
@@ -51,6 +82,9 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        <div class="mt-4">
+                            {{ $incidents->links() }}
+                        </div>
                     </div>
                 </div>
             </div>
