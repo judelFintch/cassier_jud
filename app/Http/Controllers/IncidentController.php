@@ -58,6 +58,8 @@ class IncidentController extends Controller
             'title' => 'required',
             'description' => 'required',
             'location' => 'required',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
             'date' => 'required|date',
             'user_id' => 'required|exists:users,id',
         ]);
@@ -94,6 +96,8 @@ class IncidentController extends Controller
             'title' => 'required',
             'description' => 'required',
             'location' => 'required',
+            'latitude' => 'nullable|numeric',
+            'longitude' => 'nullable|numeric',
             'date' => 'required|date',
             'user_id' => 'required|exists:users,id',
         ]);

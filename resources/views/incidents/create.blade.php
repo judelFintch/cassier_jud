@@ -22,8 +22,16 @@
                             </div>
                             <div>
                                 <label for="location" class="block font-medium text-sm text-gray-700">{{ __('Location') }}</label>
-                                <input type="text" name="location" id="location" class="form-input rounded-md shadow-sm mt-1 block w-full" />
+                                <div class="flex">
+                                    <input type="text" name="location" id="location" class="form-input rounded-md shadow-sm mt-1 block w-full" />
+                                    <button id="geocode-btn" class="ml-2 mt-1 bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded">
+                                        {{ __('Search') }}
+                                    </button>
+                                </div>
                             </div>
+                            <div id="map" class="h-64 w-full"></div>
+                            <input type="hidden" name="latitude" id="latitude">
+                            <input type="hidden" name="longitude" id="longitude">
                             <div>
                                 <label for="date" class="block font-medium text-sm text-gray-700">{{ __('Date') }}</label>
                                 <input type="datetime-local" name="date" id="date" class="form-input rounded-md shadow-sm mt-1 block w-full" />
@@ -48,3 +56,47 @@
         </div>
     </div>
 </x-app-layout>
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const map = L.map('map').setView([48.8566, 2.3522], 12);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        let marker;
+        const latInput = document.getElementById('latitude');
+        const lngInput = document.getElementById('longitude');
+
+        function setMarker(lat, lng) {
+            if (marker) {
+                marker.setLatLng([lat, lng]);
+            } else {
+                marker = L.marker([lat, lng]).addTo(map);
+            }
+            latInput.value = lat;
+            lngInput.value = lng;
+        }
+
+        map.on('click', function (e) {
+            setMarker(e.latlng.lat, e.latlng.lng);
+        });
+
+        document.getElementById('geocode-btn').addEventListener('click', function (e) {
+            e.preventDefault();
+            const address = document.getElementById('location').value;
+            if (!address) return;
+            fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const lat = parseFloat(data[0].lat);
+                        const lng = parseFloat(data[0].lon);
+                        map.setView([lat, lng], 13);
+                        setMarker(lat, lng);
+                    }
+                });
+        });
+    });
+</script>
+@endpush
