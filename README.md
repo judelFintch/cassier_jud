@@ -1,6 +1,6 @@
 # Incident Management Portal
 
-This repository contains a Laravel application used to record and analyse incidents. The project uses the **Jetstream** starter kit with the **Livewire** stack to provide authentication and account management features.
+This repository contains a Laravel application designed for police and security organisations to log incidents, analyse crime data and manage follow‑up cases. The project uses the **Jetstream** starter kit with the **Livewire** stack to provide authentication and account management features.
 
 ## Main Features
 
@@ -8,6 +8,11 @@ This repository contains a Laravel application used to record and analyse incide
 - **Geolocation Map** – display incidents on an interactive Leaflet map sourced from OpenStreetMap tiles.
 - **Statistics Dashboard** – visualise crime trends using Chart.js (incidents by type and by day).
 - **API Endpoints** – JSON endpoints for map data and dashboard statistics protected by Laravel Sanctum.
+- **Search & Filters** – quickly narrow down incidents by date, location, officer or category.
+- **File Attachments** – upload documents or photos related to each incident.
+- **Address Geocoding** – convert typed addresses to coordinates using the Nominatim API.
+- **Interactive Editing Map** – place markers directly on a map when creating or updating an incident.
+- **Case Tracking** – link incidents to cases with statuses for follow‑up.
 
 ## Tools & Technologies
 
